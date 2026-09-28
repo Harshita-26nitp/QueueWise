@@ -1,0 +1,11 @@
+import { Router } from "express";
+import * as controller from "./queue.controller.js";
+import { allowRoles, protect } from "../../middleware/auth.middleware.js";
+const router = Router({ mergeParams: true });
+router.get("/", controller.snapshot);
+router.post("/join", protect, allowRoles("CUSTOMER"), controller.join);
+router.get("/my-ticket", protect, allowRoles("CUSTOMER"), controller.myTicket);
+router.patch("/my-ticket/cancel", protect, allowRoles("CUSTOMER"), controller.cancelMine);
+router.patch("/serve-next", protect, allowRoles("OWNER"), controller.serveNext);
+router.patch("/:entryId/status", protect, allowRoles("OWNER"), controller.updateEntry);
+export default router;

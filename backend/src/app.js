@@ -1,0 +1,18 @@
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+import authRoutes from "./modules/auth/auth.routes.js";
+import businessRoutes from "./modules/business/business.routes.js";
+import queueRoutes from "./modules/queue/queue.routes.js";
+import {errorHandler, notFound } from "./middleware/error.middleware.js";
+const app = express();
+app.use(cors({origin:process.env.CLIENT_URL || "http://localhost:5173"}));
+app.use(express.json());
+app.use(morgan("dev"));
+app.get("/api/health", (req, res) => res.json({success: true, message: "QueueWise API is running" }));
+app.use("/api/auth", authRoutes);
+app.use("/api/businesses", businessRoutes);
+app.use("/api/businesses/:businessId/queue", queueRoutes);
+app.use(notFound);
+app.use(errorHandler);
+export default app;
